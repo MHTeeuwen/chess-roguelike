@@ -1,0 +1,12 @@
+{
+  "name": "chess-roguelike",
+  "version": "1.0.0",
+  "description": "A Balatro-inspired roguelike chess game with relics, blinds, and scoring mechanics",
+  "main": "game.js",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "echo \"No tests configured yet\" && exit 0"
+  },
+  "keywords": ["chess", "roguelike", "balatro", "game", "javascript"],
+  "license": "MIT"
+}

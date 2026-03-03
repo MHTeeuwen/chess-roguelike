@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess Roguelike - Break the Rules</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Danger vignette overlay -->
+  <div id="danger-vignette" class="danger-vignette"></div>
+  
+  <!-- Particle container -->
+  <div id="particles" class="particles"></div>
+  
+  <!-- Combo display -->
+  <div id="combo-display" class="combo-display">
+    <div id="combo-count" class="combo-count">0</div>
+    <div class="combo-label">COMBO</div>
+    <div id="combo-multiplier" class="combo-multiplier">×1.0</div>
+  </div>
+
+  <div class="game-container" id="game-container">
+    <!-- Left Panel: Game Info -->
+    <aside class="panel left-panel">
+      <div class="run-info">
+        <div class="stage-display">
+          <span class="label">STAGE</span>
+          <span id="stage-number" class="value">1</span>
+        </div>
+        <div class="gold-display">
+          <span class="gold-icon">⭐</span>
+          <span id="gold" class="gold-value">0</span>
+        </div>
+      </div>
+
+      <!-- Enemy display -->
+      <div id="enemy-display" class="enemy-display" style="display: none;">
+        <div id="enemy-avatar" class="enemy-avatar">👤</div>
+        <div class="enemy-info">
+          <div id="enemy-name" class="enemy-name">Unknown</div>
+          <div id="enemy-title" class="enemy-title">Challenger</div>
+        </div>
+      </div>
+
+      <div class="puzzle-objective">
+        <div class="objective-label">POSITION</div>
+        <div id="objective-text" class="objective-text">-</div>
+        <div id="objective-progress" class="objective-progress"></div>
+      </div>
+
+      <div class="moves-display">
+        <span class="label">MOVES MADE</span>
+        <span id="moves-left" class="moves-value">0</span>
+      </div>
+
+      <div class="perks-section">
+        <h3 class="section-title">YOUR PERKS</h3>
+        <div id="perks-container" class="perks-list">
+          <div class="no-perks">No perks yet</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center: Chess Board -->
+    <main class="game-area">
+      <div class="turn-indicator">
+        <div id="player-turn" class="turn-badge player active">
+          <span class="turn-piece">♔</span>
+          <span>YOUR TURN</span>
+        </div>
+        <div id="enemy-turn" class="turn-badge enemy">
+          <span class="turn-piece">♚</span>
+          <span>ENEMY</span>
+        </div>
+      </div>
+
+      <div id="game-message" class="game-message"></div>
+
+      <div class="board-container" style="position: relative;">
+        <div id="boss-indicator" class="boss-indicator" style="display: none;">⚔️ BOSS FIGHT</div>
+        <div id="special-mode" class="special-mode" style="display: none;">
+          <span id="special-mode-icon">⏱️</span>
+          <span id="special-mode-text">TIME STOP ACTIVE</span>
+        </div>
+        <div class="board-legend">
+          <span class="legend-item yours"><span class="legend-piece">♔</span> YOU (White)</span>
+          <span class="legend-item enemy"><span class="legend-piece">♚</span> ENEMY (Black)</span>
+        </div>
+        <div id="board" class="board"></div>
+        <div id="active-perks-display" class="active-perks-display"></div>
+      </div>
+
+      <div class="action-buttons">
+        <button id="undo-move" class="btn btn-secondary" disabled>↩ Undo</button>
+        <button id="skip-turn" class="btn btn-secondary">⏭ Skip Turn</button>
+        <button id="toggle-sound" class="btn btn-sound" title="Toggle Sound">🔊</button>
+      </div>
+    </main>
+
+    <!-- Right Panel: Abilities -->
+    <aside class="panel right-panel">
+      <div class="perk-abilities">
+        <h3 class="section-title">SPECIAL ABILITIES</h3>
+        <div id="abilities-container" class="abilities-list">
+          <div class="no-abilities">Win games to unlock perks!</div>
+        </div>
+      </div>
+
+      <div class="puzzle-hints">
+        <h3 class="section-title">💡 STRATEGY</h3>
+        <div id="hints-text" class="hints-text"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Event Overlay -->
+  <div id="event-overlay" class="overlay" style="display: none;">
+    <div class="event-modal">
+      <div id="event-icon" class="event-icon">🎲</div>
+      <h2 id="event-title" class="event-title">Random Event</h2>
+      <p id="event-description" class="event-description">Something happened!</p>
+      <div id="event-choices" class="event-choices"></div>
+    </div>
+  </div>
+
+  <!-- Shop Overlay -->
+  <div id="shop-overlay" class="overlay" style="display: none;">
+    <div class="shop-modal">
+      <div class="shop-header">
+        <h2>🛒 PERK SHOP</h2>
+        <div class="shop-gold">
+          <span class="gold-icon">⭐</span>
+          <span id="shop-gold">0</span>
+        </div>
+      </div>
+      <p class="shop-subtitle">Choose powerful abilities that break the rules of chess!</p>
+      <div class="shop-items" id="shop-items"></div>
+      <div class="shop-actions">
+        <button id="reroll-shop" class="btn btn-reroll">🎲 Reroll (5⭐)</button>
+        <button id="skip-shop" class="btn btn-primary">Next Game →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Complete Overlay -->
+  <div id="complete-overlay" class="overlay" style="display: none;">
+    <div class="complete-modal">
+      <h2 id="complete-title">♚ CHECKMATE!</h2>
+      <div class="reward-display">
+        <span class="reward-label">Reward:</span>
+        <span id="reward-amount" class="reward-amount">+10 ⭐</span>
+      </div>
+      <div id="bonus-breakdown" class="bonus-breakdown"></div>
+      <button id="continue-btn" class="btn btn-primary">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Game Over Overlay -->
+  <div id="gameover-overlay" class="overlay" style="display: none;">
+    <div class="gameover-modal">
+      <h2>💀 GAME OVER</h2>
+      <div class="final-stats">
+        <div class="stat">
+          <span class="stat-label">Stage Reached</span>
+          <span id="final-stage" class="stat-value">1</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Games Won</span>
+          <span id="final-puzzles" class="stat-value">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Perks Collected</span>
+          <span id="final-perks" class="stat-value">0</span>
+        </div>
+      </div>
+      <button id="new-run" class="btn btn-primary">🔄 Try Again</button>
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="start-overlay" class="overlay">
+    <div class="start-modal">
+      <h1 class="game-title">CHESS<br>ROGUELIKE</h1>
+      <p class="tagline">Break the rules. Master the board.</p>
+      
+      <div class="rules-preview">
+        <p>♟ Play chess from randomized mid-game positions</p>
+        <p>♚ Checkmate the enemy King to win</p>
+        <p>🔥 Build combos for massive bonuses</p>
+        <p>⚔️ Face powerful bosses every 5 stages</p>
+      </div>
+      
+      <div class="perk-preview">
+        <h3>✨ GAME-BREAKING PERKS</h3>
+        <p>👸 <strong>Army of Queens</strong> - ALL pawns become QUEENS!</p>
+        <p>🧠 <strong>Mind Control</strong> - Move enemy pieces as your own!</p>
+        <p>⏱️ <strong>Time Stop</strong> - Take 3 turns in a row!</p>
+        <p>⚡ <strong>Chain Lightning</strong> - Captures chain to nearby enemies!</p>
+      </div>
+      
+      <button id="start-game" class="btn btn-start">⚔️ START RUN</button>
+    </div>
+  </div>
+
+  <script src="perks.js"></script>
+  <script src="puzzles.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
