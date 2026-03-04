@@ -2577,38 +2577,76 @@ function toggleSound() {
   }
 }
 
-// ================ MOBILE PANEL TOGGLE ================
+// ================ MOBILE PANEL TOGGLE (OVERLAY) ================
 (function initMobileToggles() {
   const toggleBar = document.getElementById('mobile-toggle-bar');
+  const backdrop = document.getElementById('mobile-panel-backdrop');
   if (!toggleBar) return;
+
+  function closeAllPanels() {
+    document.getElementById('left-panel').classList.remove('mobile-visible');
+    document.getElementById('right-panel').classList.remove('mobile-visible');
+    document.getElementById('toggle-info-btn').classList.remove('active');
+    document.getElementById('toggle-abilities-btn').classList.remove('active');
+    if (backdrop) backdrop.classList.remove('active');
+  }
 
   toggleBar.addEventListener('click', (e) => {
     const btn = e.target.closest('.mobile-toggle-btn');
     if (!btn) return;
 
     const panelId = btn.dataset.panel;
-    const leftPanel = document.getElementById('left-panel');
-    const rightPanel = document.getElementById('right-panel');
-    const panel = panelId === 'left' ? leftPanel : rightPanel;
-    const otherPanel = panelId === 'left' ? rightPanel : leftPanel;
-    const otherBtn = panelId === 'left'
-      ? document.getElementById('toggle-abilities-btn')
-      : document.getElementById('toggle-info-btn');
-
-    // Toggle current panel
+    const panel = document.getElementById(panelId === 'left' ? 'left-panel' : 'right-panel');
     const isVisible = panel.classList.contains('mobile-visible');
-    if (isVisible) {
-      panel.classList.remove('mobile-visible');
-      btn.classList.remove('active');
-    } else {
-      // Close other panel first
-      otherPanel.classList.remove('mobile-visible');
-      otherBtn.classList.remove('active');
-      // Open this one
+
+    // Close everything first
+    closeAllPanels();
+
+    // If it wasn't visible, open it
+    if (!isVisible) {
       panel.classList.add('mobile-visible');
       btn.classList.add('active');
+      if (backdrop) backdrop.classList.add('active');
     }
   });
+
+  // Tap backdrop to close panels
+  if (backdrop) {
+    backdrop.addEventListener('click', closeAllPanels);
+  }
+})();
+
+// ================ MOBILE: PREVENT ZOOM & SCROLL ================
+(function initMobileLockdown() {
+  // Prevent pinch-to-zoom via gesture events (Safari)
+  document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('gesturechange', function(e) {
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('gestureend', function(e) {
+    e.preventDefault();
+  }, { passive: false });
+
+  // Prevent zoom via multi-touch on touchmove
+  document.addEventListener('touchmove', function(e) {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // Prevent double-tap zoom by intercepting rapid taps
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
 })();
 
 // Initialize

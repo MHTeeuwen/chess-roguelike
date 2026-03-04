@@ -1842,7 +1842,8 @@ body {
 
 /* Mobile elements - hidden on desktop */
 .mobile-toggle-bar,
-.mobile-info-bar {
+.mobile-info-bar,
+.mobile-panel-backdrop {
   display: none;
 }
 
@@ -1877,33 +1878,48 @@ body {
 
 /* ================ MOBILE (iPhone) ================ */
 @media (max-width: 480px) {
-  body {
-    overflow-x: hidden;
-    overflow-y: auto;
+  html, body {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    touch-action: manipulation;
   }
 
-  /* Main layout: single column, no gap, tight padding */
+  /* Main layout: single column, locked to viewport */
   .game-container {
     display: flex;
     flex-direction: column;
     grid-template-columns: unset;
     gap: 0;
-    padding: 8px 4px;
-    height: auto;
-    min-height: 100vh;
-    min-height: 100dvh;
+    padding: env(safe-area-inset-top, 4px) 2px env(safe-area-inset-bottom, 4px) 2px;
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+    margin: 0;
+    justify-content: space-between;
   }
 
-  /* ---- Hide side panels by default on mobile ---- */
+  /* ---- Side panels: fixed overlay on mobile ---- */
   .left-panel,
   .right-panel {
     display: none;
+    position: fixed;
+    left: 4px;
+    right: 4px;
+    bottom: calc(env(safe-area-inset-bottom, 4px) + 44px);
     flex-direction: column;
     gap: 10px;
-    padding: 12px 10px;
-    border-radius: 12px;
-    max-height: 50vh;
+    padding: 14px 12px;
+    border-radius: 14px 14px 0 0;
+    max-height: 55vh;
     overflow-y: auto;
+    z-index: 100;
+    background: var(--bg-panel);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
     animation: mobileSlideUp 0.25s ease-out;
   }
 
@@ -1917,6 +1933,22 @@ body {
     display: flex;
   }
 
+  /* Backdrop overlay when panels are open */
+  .mobile-panel-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
+
+  .mobile-panel-backdrop.active {
+    display: block;
+  }
+
   /* Perks/abilities revert to vertical on mobile panel */
   .left-panel .perks-list,
   .right-panel .abilities-list {
@@ -1927,8 +1959,8 @@ body {
   /* ---- Mobile toggle bar ---- */
   .mobile-toggle-bar {
     display: flex;
-    gap: 8px;
-    padding: 10px 4px 6px;
+    gap: 6px;
+    padding: 4px 4px 2px;
     justify-content: center;
     order: 3;
     margin-top: 2px;
@@ -1937,9 +1969,9 @@ body {
 
   .mobile-toggle-btn {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 10px 14px;
+    padding: 7px 10px;
     border: 1.5px solid var(--accent-purple);
     border-radius: 10px;
     background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
@@ -1960,9 +1992,13 @@ body {
 
   /* ---- Compact game area ---- */
   .game-area {
-    gap: 6px;
+    gap: 3px;
     order: 2;
     padding: 0;
+    flex: 1;
+    justify-content: center;
+    min-height: 0;
+    overflow: hidden;
   }
 
   /* ---- Turn indicator - compact ---- */
@@ -1971,56 +2007,57 @@ body {
   }
 
   .turn-badge {
-    padding: 5px 10px;
-    font-size: 0.7rem;
-    gap: 5px;
-    border-width: 1.5px;
-    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 0.65rem;
+    gap: 4px;
+    border-width: 1px;
+    border-radius: 5px;
   }
 
   .turn-badge .turn-piece {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .turn-badge.player .turn-piece {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .turn-badge.enemy .turn-piece {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   /* ---- Game message - compact ---- */
   .game-message {
-    min-height: 20px;
-    font-size: 0.85rem;
-    padding: 0 8px;
+    min-height: 16px;
+    font-size: 0.8rem;
+    padding: 0 4px;
+    line-height: 1.2;
   }
 
   /* ---- Board - maximize width ---- */
   .board-container {
-    padding: 6px;
-    border-radius: 10px;
+    padding: 2px;
+    border-radius: 6px;
     margin: 0 auto;
     width: 100%;
   }
 
   .board {
-    width: min(92vw, 92vmin) !important;
-    height: min(92vw, 92vmin) !important;
+    width: calc(100vw - 12px) !important;
+    height: calc(100vw - 12px) !important;
+    max-width: 371px;
+    max-height: 371px;
     border-radius: 4px;
     margin: 0 auto;
   }
 
   .square {
-    font-size: min(10vw, 44px);
+    font-size: min(11vw, 46px);
   }
 
-  /* Board legend - compact */
+  /* Board legend - hidden on mobile */
   .board-legend {
-    gap: 16px;
-    margin-bottom: 6px;
-    font-size: 0.7rem;
+    display: none;
   }
 
   .legend-item .legend-piece {
@@ -2042,9 +2079,9 @@ body {
 
   /* Active perks below board - compact */
   .active-perks-display {
-    margin-top: 6px;
-    min-height: 28px;
-    gap: 4px;
+    margin-top: 2px;
+    min-height: 22px;
+    gap: 3px;
   }
 
   .active-perk-badge {
@@ -2059,28 +2096,21 @@ body {
 
   /* ---- Action buttons - compact ---- */
   .action-buttons {
-    gap: 8px;
-    padding: 4px 0;
+    gap: 6px;
+    padding: 2px 0;
   }
 
   .action-buttons .btn {
-    padding: 8px 12px;
-    font-size: 0.75rem;
+    padding: 6px 10px;
+    font-size: 0.7rem;
   }
 
   .btn-sound {
-    padding: 8px 10px;
-    font-size: 0.9rem;
+    padding: 6px 8px;
+    font-size: 0.85rem;
   }
 
-  /* ---- Left panel mobile: inline info bar at top ---- */
-  .left-panel {
-    order: 4;
-  }
-
-  .right-panel {
-    order: 5;
-  }
+  /* Panel order no longer needed - panels are position: fixed overlays */
 
   /* ---- Mobile info bar (stage + gold + moves) ---- */
   .mobile-info-bar {
@@ -2088,12 +2118,12 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 6px;
-    padding: 6px 8px;
+    padding: 4px 8px;
     background: var(--bg-panel);
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     order: 1;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 
   .mobile-info-bar .mobile-info-item {
@@ -2267,7 +2297,9 @@ body {
   .overlay {
     padding: 12px;
     align-items: flex-start;
-    padding-top: 10vh;
+    padding-top: 6vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Start screen */
