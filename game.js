@@ -1862,7 +1862,8 @@ function startPuzzle() {
   
   const stageMsg = enemy.isBoss ? `⚔️ BOSS: ${enemy.name}!` : `VS ${enemy.name}`;
   showMessage(stageMsg, enemy.isBoss ? 'error' : 'info');
-  document.getElementById('hints-text').textContent = puzzle.hint || '';
+  const hintsEl = document.getElementById('hints-text');
+  if (hintsEl) hintsEl.textContent = puzzle.hint || '';
   document.getElementById('undo-move').disabled = true;
 }
 
@@ -2561,7 +2562,7 @@ document.getElementById('continue-btn').onclick = continueAfterPuzzle;
 document.getElementById('skip-shop').onclick = closeShop;
 document.getElementById('reroll-shop').onclick = rerollShop;
 document.getElementById('undo-move').onclick = undoMove;
-document.getElementById('skip-turn').onclick = skipTurn;
+
 document.getElementById('toggle-sound').onclick = toggleSound;
 
 function toggleSound() {
@@ -2586,7 +2587,8 @@ function toggleSound() {
   function closeAllPanels() {
     document.getElementById('left-panel').classList.remove('mobile-visible');
     document.getElementById('right-panel').classList.remove('mobile-visible');
-    document.getElementById('toggle-info-btn').classList.remove('active');
+    const infoBtn = document.getElementById('toggle-info-btn');
+    if (infoBtn) infoBtn.classList.remove('active');
     document.getElementById('toggle-abilities-btn').classList.remove('active');
     if (backdrop) backdrop.classList.remove('active');
   }
