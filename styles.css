@@ -698,8 +698,8 @@ body {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
+  grid-template-columns: repeat(8, 12.5%);
+  grid-template-rows: repeat(8, 12.5%);
   width: min(60vmin, 480px);
   height: min(60vmin, 480px);
   border-radius: 6px;
@@ -812,6 +812,10 @@ body {
   position: relative;
   transition: all 0.15s ease;
   user-select: none;
+  aspect-ratio: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .square.light { background: var(--light-square); }
