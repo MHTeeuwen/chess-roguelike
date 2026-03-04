@@ -2386,22 +2386,30 @@ function renderPerks() {
 function updateUI() {
   document.getElementById('stage-number').textContent = gameState.stage;
   document.getElementById('gold').textContent = gameState.gold;
-  
+
   if (gameState.currentPuzzle) {
     document.getElementById('objective-text').textContent = gameState.currentPuzzle.description;
     document.getElementById('objective-progress').textContent = getProgressText(gameState);
-    
+
     // Show move count (no limit in full game mode)
     document.getElementById('moves-left').textContent = gameState.movesUsed;
     document.getElementById('moves-left').className = 'moves-value';
   }
-  
+
   const canUndo = gameState.moveHistory.length > 0 && gameState.undosUsed < gameState.maxUndos;
   document.getElementById('undo-move').disabled = !canUndo;
-  
+
+  // Update mobile info bar
+  const mobileStage = document.getElementById('mobile-stage');
+  const mobileGold = document.getElementById('mobile-gold');
+  const mobileMoves = document.getElementById('mobile-moves');
+  if (mobileStage) mobileStage.textContent = gameState.stage;
+  if (mobileGold) mobileGold.textContent = gameState.gold;
+  if (mobileMoves) mobileMoves.textContent = gameState.movesUsed;
+
   // Update active perks display
   renderActivePerks();
-  
+
   // Update special mode indicator
   updateSpecialMode();
 }
@@ -2568,6 +2576,40 @@ function toggleSound() {
     btn.classList.add('muted');
   }
 }
+
+// ================ MOBILE PANEL TOGGLE ================
+(function initMobileToggles() {
+  const toggleBar = document.getElementById('mobile-toggle-bar');
+  if (!toggleBar) return;
+
+  toggleBar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.mobile-toggle-btn');
+    if (!btn) return;
+
+    const panelId = btn.dataset.panel;
+    const leftPanel = document.getElementById('left-panel');
+    const rightPanel = document.getElementById('right-panel');
+    const panel = panelId === 'left' ? leftPanel : rightPanel;
+    const otherPanel = panelId === 'left' ? rightPanel : leftPanel;
+    const otherBtn = panelId === 'left'
+      ? document.getElementById('toggle-abilities-btn')
+      : document.getElementById('toggle-info-btn');
+
+    // Toggle current panel
+    const isVisible = panel.classList.contains('mobile-visible');
+    if (isVisible) {
+      panel.classList.remove('mobile-visible');
+      btn.classList.remove('active');
+    } else {
+      // Close other panel first
+      otherPanel.classList.remove('mobile-visible');
+      otherBtn.classList.remove('active');
+      // Open this one
+      panel.classList.add('mobile-visible');
+      btn.classList.add('active');
+    }
+  });
+})();
 
 // Initialize
 renderBoard();

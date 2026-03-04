@@ -1840,7 +1840,13 @@ body {
   100% { transform: translateX(100%) rotate(45deg); }
 }
 
-/* Responsive */
+/* Mobile elements - hidden on desktop */
+.mobile-toggle-bar,
+.mobile-info-bar {
+  display: none;
+}
+
+/* Responsive - Tablet */
 @media (max-width: 1100px) {
   .game-container {
     grid-template-columns: 1fr;
@@ -1848,14 +1854,14 @@ body {
     height: auto;
     min-height: 100vh;
   }
-  
+
   .panel {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     gap: 12px;
   }
-  
+
   .perks-list, .abilities-list {
     flex-direction: row;
     flex-wrap: wrap;
@@ -1867,4 +1873,587 @@ body {
   .game-title { font-size: 2.8rem; }
   .shop-items { grid-template-columns: 1fr; }
   .final-stats { flex-direction: column; gap: 16px; }
+}
+
+/* ================ MOBILE (iPhone) ================ */
+@media (max-width: 480px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* Main layout: single column, no gap, tight padding */
+  .game-container {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: unset;
+    gap: 0;
+    padding: 8px 4px;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* ---- Hide side panels by default on mobile ---- */
+  .left-panel,
+  .right-panel {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 10px;
+    border-radius: 12px;
+    max-height: 50vh;
+    overflow-y: auto;
+    animation: mobileSlideUp 0.25s ease-out;
+  }
+
+  @keyframes mobileSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .left-panel.mobile-visible,
+  .right-panel.mobile-visible {
+    display: flex;
+  }
+
+  /* Perks/abilities revert to vertical on mobile panel */
+  .left-panel .perks-list,
+  .right-panel .abilities-list {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  /* ---- Mobile toggle bar ---- */
+  .mobile-toggle-bar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 4px 6px;
+    justify-content: center;
+    order: 3;
+    margin-top: 2px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .mobile-toggle-btn {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    border: 1.5px solid var(--accent-purple);
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .mobile-toggle-btn.active {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 212, 255, 0.05));
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.25);
+  }
+
+  /* ---- Compact game area ---- */
+  .game-area {
+    gap: 6px;
+    order: 2;
+    padding: 0;
+  }
+
+  /* ---- Turn indicator - compact ---- */
+  .turn-indicator {
+    gap: 8px;
+  }
+
+  .turn-badge {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    gap: 5px;
+    border-width: 1.5px;
+    border-radius: 6px;
+  }
+
+  .turn-badge .turn-piece {
+    font-size: 1rem;
+  }
+
+  .turn-badge.player .turn-piece {
+    font-size: 1rem;
+  }
+
+  .turn-badge.enemy .turn-piece {
+    font-size: 1rem;
+  }
+
+  /* ---- Game message - compact ---- */
+  .game-message {
+    min-height: 20px;
+    font-size: 0.85rem;
+    padding: 0 8px;
+  }
+
+  /* ---- Board - maximize width ---- */
+  .board-container {
+    padding: 6px;
+    border-radius: 10px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .board {
+    width: min(92vw, 92vmin) !important;
+    height: min(92vw, 92vmin) !important;
+    border-radius: 4px;
+    margin: 0 auto;
+  }
+
+  .square {
+    font-size: min(10vw, 44px);
+  }
+
+  /* Board legend - compact */
+  .board-legend {
+    gap: 16px;
+    margin-bottom: 6px;
+    font-size: 0.7rem;
+  }
+
+  .legend-item .legend-piece {
+    font-size: 1rem;
+  }
+
+  /* Boss / special mode indicators */
+  .boss-indicator {
+    top: -22px;
+    font-size: 0.65rem;
+    padding: 4px 12px;
+  }
+
+  .special-mode {
+    top: -26px;
+    font-size: 0.7rem;
+    padding: 5px 14px;
+  }
+
+  /* Active perks below board - compact */
+  .active-perks-display {
+    margin-top: 6px;
+    min-height: 28px;
+    gap: 4px;
+  }
+
+  .active-perk-badge {
+    padding: 3px 8px;
+    font-size: 0.65rem;
+    border-radius: 12px;
+  }
+
+  .perk-badge-icon {
+    font-size: 0.8rem;
+  }
+
+  /* ---- Action buttons - compact ---- */
+  .action-buttons {
+    gap: 8px;
+    padding: 4px 0;
+  }
+
+  .action-buttons .btn {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
+  .btn-sound {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+
+  /* ---- Left panel mobile: inline info bar at top ---- */
+  .left-panel {
+    order: 4;
+  }
+
+  .right-panel {
+    order: 5;
+  }
+
+  /* ---- Mobile info bar (stage + gold + moves) ---- */
+  .mobile-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 6px 8px;
+    background: var(--bg-panel);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    order: 1;
+    margin-bottom: 4px;
+  }
+
+  .mobile-info-bar .mobile-info-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .mobile-info-bar .mobile-info-label {
+    color: var(--text-muted);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mobile-info-bar .mobile-info-value {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .mobile-info-bar .mobile-stage {
+    color: var(--accent-purple);
+  }
+
+  .mobile-info-bar .mobile-gold {
+    color: var(--accent-gold);
+  }
+
+  .mobile-info-bar .mobile-moves {
+    color: var(--accent-cyan);
+  }
+
+  /* Enemy display - compact */
+  .enemy-display {
+    padding: 6px 10px;
+    gap: 8px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    border-width: 1.5px;
+  }
+
+  .enemy-avatar {
+    font-size: 1.4rem;
+  }
+
+  .enemy-name {
+    font-size: 0.85rem;
+  }
+
+  .enemy-title {
+    font-size: 0.65rem;
+  }
+
+  /* Run info inside left panel - compact */
+  .run-info {
+    gap: 8px;
+  }
+
+  .stage-display, .gold-display {
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .stage-display .label {
+    font-size: 0.55rem;
+    margin-bottom: 2px;
+  }
+
+  .stage-display .value {
+    font-size: 1.4rem;
+  }
+
+  .gold-icon {
+    font-size: 1.1rem;
+  }
+
+  .gold-value {
+    font-size: 1.1rem;
+  }
+
+  .moves-display {
+    padding: 8px;
+  }
+
+  .moves-display .label {
+    font-size: 0.55rem;
+  }
+
+  .moves-value {
+    font-size: 1.5rem;
+  }
+
+  /* Objective - compact */
+  .puzzle-objective {
+    padding: 10px;
+    border-radius: 8px;
+    border-left-width: 3px;
+  }
+
+  .objective-label {
+    font-size: 0.55rem;
+    margin-bottom: 4px;
+  }
+
+  .objective-text {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+
+  .objective-progress {
+    font-size: 0.8rem;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 0.65rem;
+    margin-bottom: 6px;
+  }
+
+  /* Perk items - compact */
+  .perk-item {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  /* Ability items - compact */
+  .ability-item {
+    padding: 10px;
+  }
+
+  .ability-header {
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .ability-icon { font-size: 1.1rem; }
+  .ability-name { font-size: 0.85rem; }
+  .ability-desc { font-size: 0.75rem; }
+
+  /* Hints - compact */
+  .puzzle-hints {
+    padding: 10px;
+  }
+
+  .hints-text {
+    font-size: 0.8rem;
+  }
+
+  /* ---- Combo display - repositioned for mobile ---- */
+  .combo-display {
+    right: 10px;
+    top: 40%;
+  }
+
+  .combo-count {
+    font-size: 2.5rem;
+  }
+
+  .combo-label {
+    font-size: 0.75rem;
+  }
+
+  .combo-multiplier {
+    font-size: 1rem;
+  }
+
+  /* ---- Overlays / Modals - fit mobile ---- */
+  .overlay {
+    padding: 12px;
+    align-items: flex-start;
+    padding-top: 10vh;
+  }
+
+  /* Start screen */
+  .start-modal {
+    padding: 24px 16px;
+    max-width: 100%;
+  }
+
+  .game-title {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+  }
+
+  .tagline {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+
+  .rules-preview {
+    margin-bottom: 16px;
+  }
+
+  .rules-preview p {
+    font-size: 0.85rem;
+    margin: 6px 0;
+    padding-left: 6px;
+  }
+
+  .perk-preview {
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+  }
+
+  .perk-preview h3 {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+  }
+
+  .perk-preview p {
+    font-size: 0.8rem;
+    margin: 5px 0;
+  }
+
+  .btn-start {
+    font-size: 1.1rem;
+    padding: 14px 40px;
+  }
+
+  /* Shop modal */
+  .shop-modal {
+    padding: 20px 14px;
+    border-radius: 14px;
+    max-width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  .shop-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .shop-gold {
+    font-size: 1rem;
+  }
+
+  .shop-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 14px;
+  }
+
+  .shop-items {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .shop-item {
+    padding: 14px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .shop-item .perk-icon {
+    font-size: 2rem;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .shop-item .perk-name {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+  }
+
+  .shop-item .perk-desc {
+    font-size: 0.75rem;
+    margin-bottom: 4px;
+    min-height: unset;
+  }
+
+  .shop-item .perk-price {
+    font-size: 0.9rem;
+  }
+
+  .shop-actions {
+    gap: 10px;
+  }
+
+  .shop-actions .btn {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+
+  /* Complete modal */
+  .complete-modal {
+    padding: 24px 16px;
+    border-radius: 14px;
+  }
+
+  .complete-modal h2 {
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+  }
+
+  .reward-amount {
+    font-size: 1.6rem;
+  }
+
+  /* Game over modal */
+  .gameover-modal {
+    padding: 28px 16px;
+    border-radius: 14px;
+  }
+
+  .gameover-modal h2 {
+    font-size: 1.5rem;
+    margin-bottom: 18px;
+  }
+
+  .final-stats {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  /* Event modal */
+  .event-modal {
+    padding: 20px 14px;
+    max-width: 100%;
+    border-radius: 14px;
+  }
+
+  .event-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+
+  .event-title {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .event-description {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .event-choice {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  /* Perk badges on squares - slightly smaller */
+  .badge-icon {
+    font-size: 0.55rem;
+  }
+
+  /* Floating text - smaller on mobile */
+  .floating-text.capture { font-size: 1.4rem; }
+  .floating-text.bonus { font-size: 1.1rem; }
+  .floating-text.combo { font-size: 1.8rem; }
 }

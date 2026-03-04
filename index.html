@@ -24,8 +24,24 @@
   </div>
 
   <div class="game-container" id="game-container">
+    <!-- Mobile info bar - visible only on mobile -->
+    <div class="mobile-info-bar" id="mobile-info-bar">
+      <div class="mobile-info-item">
+        <span class="mobile-info-label">STAGE</span>
+        <span class="mobile-info-value mobile-stage" id="mobile-stage">1</span>
+      </div>
+      <div class="mobile-info-item">
+        <span>⭐</span>
+        <span class="mobile-info-value mobile-gold" id="mobile-gold">0</span>
+      </div>
+      <div class="mobile-info-item">
+        <span class="mobile-info-label">MOVES</span>
+        <span class="mobile-info-value mobile-moves" id="mobile-moves">0</span>
+      </div>
+    </div>
+
     <!-- Left Panel: Game Info -->
-    <aside class="panel left-panel">
+    <aside class="panel left-panel" id="left-panel">
       <div class="run-info">
         <div class="stage-display">
           <span class="label">STAGE</span>
@@ -101,8 +117,14 @@
       </div>
     </main>
 
+    <!-- Mobile toggle bar -->
+    <div class="mobile-toggle-bar" id="mobile-toggle-bar">
+      <button class="mobile-toggle-btn" id="toggle-info-btn" data-panel="left">📋 Info & Perks</button>
+      <button class="mobile-toggle-btn" id="toggle-abilities-btn" data-panel="right">⚡ Abilities</button>
+    </div>
+
     <!-- Right Panel: Abilities -->
-    <aside class="panel right-panel">
+    <aside class="panel right-panel" id="right-panel">
       <div class="perk-abilities">
         <h3 class="section-title">SPECIAL ABILITIES</h3>
         <div id="abilities-container" class="abilities-list">
